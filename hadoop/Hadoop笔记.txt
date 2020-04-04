@@ -1,0 +1,90 @@
+
+
+切片流程
+Input(读入数据集)-->InputFormat(切片)-->shuffle-->OutputFormat-->Output(输出结果集)
+
+数据切片与MapTask并行度机制？
+1、一个Job的Map阶段并行度是由客户端在提交Job时的切片数决定。
+2、每一个Split切片分配一个MapTask并行实例处理。
+3、默认情况下，切片大小=BlockSize。
+4、切片时不考虑数据集整体，而是逐个针对每一个文件单独切片。
+
+切片的规则（切片的在具体执行是依靠InputFormat这个类进行的）:
+Math.max(minSize, Math.min(maxSize, blockSize));
+切片的最小值，切片的最大值，块大小
+取中间那个值
+
+当文件的大小大于128Mb*1.1的时候，开始切片。
+当文件的大小小于128Mb*1.1的时候，把该文件当成一个整体。
+
+CombineTextInputFormat切片方式：先按照4Mb进行文件分块，之后把分成的块逐个累加，没当刚大于4mb的时候，切分为一片
+小于4Mb为一块，大于4Mb的文件，小于4*2mb的文件，先切一个4mb的块，在将剩下的平均切成两块。
+
+InputFormat      切片方法            kv方法
+Text             FIF的切片方法        LineRecordReader
+Text             FIF的切片方法        KeyValueLineRecordReader
+NLine            自定义，n行一片       LineRecordReader
+CombineText      自定义               CombineFIleRecordReader
+FixedLength      FIF的切片方法         FixedLengthRecordReader
+SequenceFile     FiF的切片方法         SequenceFileRecordReader
+
+MapReduce的详细工作流程
+1、待处理文本 /user/input
+2、客户端submit()前，获取待处理的数据的信息，然后根据参数配置，形成一个任务分配的规划。
+3、提交信息（Job.split、wc.jar、job.xml等）
+4、计算MapTask的数量
+5、默认TextInputFormat
+6、逻辑运算
+7、向环形缓冲区写入kv数据
+8、分区、排序，利用归并排序进行全排序
+9、溢出到文件（分区且区内有序）
+10、Merge归并排序。
+
+区内进行快排
+
+MapTask = 分片数（所谓分区：指明数据应该去往哪个MapTask）
+Reduce = 需求（可以自己指定，每个reduceTask对应一个分区文件）
+
+shuffle机制:
+1、map--写入kv数据到缓冲区，默认为100M；
+2、partition--sort--内存不够，溢出刷新缓冲区数据到磁盘，先进行分区，再进行快速排序；
+3、combiner--按照分区进行归并排序，合并分区并排序；
+4、得到分区输出结果；
+copy--copy到内存中，内存不够则溢出数据到磁盘，对每个map来的数据进行归并排序--按照相同的key分组--交给reducer方法
+
+Partitioner的分区号，必须从0开始。
+
+
+
+
+分区的意义：告诉某一条数据应该被哪个Task处理
+
+Map到Reduce的过程经过强制性的全排序。
+
+combiner作用：减少磁盘Map阶段的局部IO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
