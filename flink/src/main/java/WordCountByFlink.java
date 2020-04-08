@@ -9,7 +9,7 @@ import java.util.Arrays;
  * @author Spark
  */
 public class WordCountByFlink {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
@@ -21,7 +21,7 @@ public class WordCountByFlink {
                 collector.collect(Tuple2.of(w,1));
             });
         });
-
+        env.execute("");
 
     }
 }
