@@ -1,0 +1,19 @@
+版本号：
+1.9.1
+第一个是大版本号
+第二个是中版本号：功能性更新
+第三个是小版本号：BUG修复
+==============================================================
+clientPort=2181
+initLimit=10
+autopurge.purgeInterval=24
+syncLimit=5
+tickTime=3000
+dataDir=/hadoop/zookeeper
+autopurge.snapRetainCount=30
+server.1=manager93.bigdata:2888:3888  //通信端口号：选举端口号
+server.2=master94.bigdata:2888:3888
+server.3=worker95.bigdata:2888:3888
+============================================================
+供服务端调用的函数叫做回调函数
+

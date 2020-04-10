@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  * @author Spark
  */
-public class WcMapper extends Mapper<LongWritable, Text, Text, LongWritable> {
+public class WcMapper extends Mapper<LongWritable, Text, Text, LongWritable>{
     Text wordMap = new Text();
     LongWritable oneValue =  new LongWritable();
     @Override

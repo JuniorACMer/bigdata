@@ -13,7 +13,13 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
  */
 public class WcDriver {
     public static void main(String[] args) throws Exception {
-        Job job = Job.getInstance(new Configuration());
+        System.setProperty("user.name","hdfs");
+
+        Configuration configuration = new Configuration();
+        configuration.set("dfs.defaultFS","hdfs://10.180.210.93:8020");
+        configuration.set("yarn.resourcemanager.address","hdfs://10.180.210.93:8050");
+        Job job = Job.getInstance(configuration);
+
         job.setNumReduceTasks(10);
         //设置作业提交主类
         job.setJarByClass(WcDriver.class);
@@ -27,7 +33,7 @@ public class WcDriver {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(LongWritable.class);
         //设置 输入输出路径
-        FileInputFormat.setInputPaths(job, new Path(args[0]));
+        FileInputFormat.setInputPaths(job, args[0]);
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
         //等待驱动程序调用
         boolean result = job.waitForCompletion(true);
