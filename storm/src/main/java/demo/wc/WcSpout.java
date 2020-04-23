@@ -35,7 +35,7 @@ public class WcSpout extends BaseRichSpout {
     }
 
     @Override
-    public void open(Map<String, Object> map, TopologyContext topologyContext, SpoutOutputCollector spoutOutputCollector) {
+    public void open(Map map, TopologyContext topologyContext, SpoutOutputCollector spoutOutputCollector) {
         System.out.println("===========================打开水龙头==========================");
         this.collector = spoutOutputCollector;
     }

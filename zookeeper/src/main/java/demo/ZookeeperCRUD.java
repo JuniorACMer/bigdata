@@ -1,22 +1,21 @@
 package demo;
 
-import org.apache.zookeeper.*;
-import org.apache.zookeeper.data.ACL;
+import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.KeeperException;
+import org.apache.zookeeper.ZooDefs;
+import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 /**
  * @author inspur
  * @version 1.0
  * @date 2020/4/10 15:00
  */
-@SuppressWarnings("AlibabaClassNamingShouldBeCamel")
 public class ZookeeperCRUD {
     private ZooKeeper zkClient;
     private static final String CONNECT_STRING = "10.180.210.93:2181,10.180.210.94:2181,10.180.210.95:2181";
@@ -24,7 +23,7 @@ public class ZookeeperCRUD {
 
     @Before
     public void initialize() throws IOException {
-//        System.setProperty("user.name", "hdfs");
+//      System.setProperty("user.name", "hdfs");
         zkClient = new ZooKeeper(CONNECT_STRING, TIMEOUT, (event) -> {
             System.out.println("默认回调函数！");
         });
@@ -82,6 +81,7 @@ public class ZookeeperCRUD {
     public void testRegister() throws KeeperException, InterruptedException {
         register();
     }
+
     public void register() throws KeeperException, InterruptedException {
         byte[] data = zkClient.getData("/LULULU0000000032", (watcher) -> {
             try {

@@ -19,6 +19,5 @@ public class SharpBolt extends BaseBasicBolt {
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
-
     }
 }
