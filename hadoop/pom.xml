@@ -23,7 +23,7 @@
         </plugins>
     </build>
     <properties>
-        <hadoop.version>3.2.1</hadoop.version>
+        <hadoop.version>3.2.2</hadoop.version>
     </properties>
     <dependencies>
         <dependency>
